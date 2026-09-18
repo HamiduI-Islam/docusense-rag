@@ -14,6 +14,9 @@ To ensure a frictionless evaluation, this project has been fully containerized. 
 | **Embeddings** | sentence-transformers | CPU-optimized PyTorch context vectorization |
 | **Deployment** | Docker & Compose | Isolated, reproducible environment execution |
 
+### 📐 Chunking & Embedding Strategy
+* **Chunking Strategy:** Documents are processed using Recursive Character Splitting (~512 characters, 50-character overlap). **Justification:** This respects natural semantic boundaries (sentences/paragraphs) while the overlap ensures critical context is not lost across chunk edges, maintaining high retrieval accuracy.
+* **Embedding Model:** `sentence-transformers/all-MiniLM-L6-v2`. **Justification:** This model provides an optimal balance between semantic precision and resource efficiency. It is highly optimized for CPU inference, allowing the Docker container to generate dense vectors quickly without requiring GPU acceleration.
 ---
 
 ## 🚀 Quick Start Guide
@@ -69,6 +72,23 @@ Submit an out-of-scope question:
 ```
 *Expected Result:* `200 OK` with a clear fallback rejection stating that the provided context does not contain relevant information, verifying zero model hallucination.
 
+### 6. API Testing via cURL (Terminal)
+Alternatively, you can test the API directly from your local terminal using the following curl commands. *(Note: These commands are formatted for Windows PowerShell/Command Prompt to safely escape JSON quotation marks).*
+
+**Test Case A: High-Confidence Retrieval**
+Verify the RAG system accurately extracts and answers based on the ingested document.
+```bash
+cmd.exe /c 'curl -X POST "http://localhost:8000/api/query" -H "Content-Type: application/json" -d "{\"question\": \"What is the policy on database backup retention periods?\"}"'
+```
+*Expected Result:* A `200 OK` JSON response containing the exact policy details retrieved from the document and the listed context chunks.
+
+**Test Case B: Out-of-Scope Fallback Test**
+Verify the system's guardrails successfully reject queries unrelated to the ingested data.
+```bash
+cmd.exe /c 'curl -X POST "http://localhost:8000/api/query" -H "Content-Type: application/json" -d "{\"question\": \"What are the ingredients needed to bake a chocolate cake?\"}"'
+```
+*Expected Result:* A `200 OK` JSON response featuring a clear fallback statement (e.g., "The provided context does not contain relevant information"), proving zero model hallucination.
+```
 ---
 
 ## 📂 Project Structure
