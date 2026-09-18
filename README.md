@@ -48,17 +48,26 @@ Open a **second, separate terminal window** while the server is running. Execute
 docker compose exec docusense-api python app/vector_store.py
 ```
 
-### 5. Test the Application
-The application features a built-in Swagger UI for interactive testing.
-1. Open your web browser and navigate to: `http://localhost:8000/docs`
-2. Expand the **POST /api/query** endpoint and click **Try it out**.
-3. Submit the following JSON payload:
+### 5. Verify & Test via Swagger UI
+Open your browser and navigate to `http://localhost:8000/docs`. Under **POST /api/query**, click **Try it out** and test both scenarios:
+
+#### Test Case 1: Grounded Information Retrieval
+Submit an in-domain question:
 ```json
 {
-  "question": "What are the primary key points discussed in the document?"
+  "question": "What is the policy on database backup retention periods?"
 }
 ```
-4. Click **Execute** to view the `200 OK` response containing the LLM's grounded answer and the specific document chunks used for context.
+*Expected Result:* `200 OK` response with the policy details retrieved from the document and listed context chunks.
+
+#### Test Case 2: Anti-Hallucination Guardrail Check
+Submit an out-of-scope question:
+```json
+{
+  "question": "What are the ingredients needed to bake a chocolate cake?"
+}
+```
+*Expected Result:* `200 OK` with a clear fallback rejection stating that the provided context does not contain relevant information, verifying zero model hallucination.
 
 ---
 
