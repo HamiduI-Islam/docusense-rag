@@ -15,7 +15,7 @@ To ensure a frictionless evaluation, this project has been fully containerized. 
 | **Deployment** | Docker & Compose | Isolated, reproducible environment execution |
 
 ### 📐 Chunking & Embedding Strategy
-* **Chunking Strategy:** Documents are processed using Recursive Character Splitting (~512 characters, 50-character overlap). **Justification:** This respects natural semantic boundaries (sentences/paragraphs) while the overlap ensures critical context is not lost across chunk edges, maintaining high retrieval accuracy.
+* **Chunking Strategy:** Documents are processed using Recursive Character Splitting (~400 characters, 50-character overlap). **Justification:** This respects natural semantic boundaries (sentences/paragraphs) while the overlap ensures critical context is not lost across chunk edges, maintaining high retrieval accuracy.
 * **Embedding Model:** `sentence-transformers/all-MiniLM-L6-v2`. **Justification:** This model provides an optimal balance between semantic precision and resource efficiency. It is highly optimized for CPU inference, allowing the Docker container to generate dense vectors quickly without requiring GPU acceleration.
 ---
 
